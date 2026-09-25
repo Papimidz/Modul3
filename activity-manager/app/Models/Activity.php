@@ -20,4 +20,10 @@ class Activity extends Model
             'activity_date' => 'date',
         ];
     }
+
+    public const STATUSES = [
+        'Planned',
+        'Ongoing',
+        'Done',
+    ];
 }

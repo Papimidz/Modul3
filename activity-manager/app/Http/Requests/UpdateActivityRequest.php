@@ -21,7 +21,7 @@ class UpdateActivityRequest extends FormRequest
             'category' => ['required', 'string', 'max:50'],
             'status' => [
                 'required',
-                Rule::in(['Planned', 'Ongoing', 'Done']),
+                Rule::in(Activity::STATUSES),
             ],
         ];
     }

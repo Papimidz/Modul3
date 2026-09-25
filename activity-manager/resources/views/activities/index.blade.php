@@ -8,6 +8,39 @@
 <body>
     <h1>Daftar Kegiatan</h1>
 
+    <form method="GET" action="{{ route('activities.index') }}">
+        <label for="status">Filter Status:</label>
+
+        <select name="status" id="status">
+            <option value="">Semua</option>
+
+            <option value="Planned"
+                @selected($status === 'Planned')>
+                Planned
+            </option>
+
+            <option value="Ongoing"
+                @selected($status === 'Ongoing')>
+                Ongoing
+            </option>
+
+            <option value="Done"
+                @selected($status === 'Done')>
+                Done
+            </option>
+    </select>
+
+    <button type="submit">Filter</button>
+    </form>
+
+    @if (session('success'))
+        <p>{{ session('success') }}</p>
+    @endif
+
+    <a href="{{ route('activities.create') }}">
+        Tambah Kegiatan
+    </a>
+
     @forelse ($activities as $activity)
         <article>
             <h2>
