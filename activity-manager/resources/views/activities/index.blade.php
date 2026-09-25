@@ -10,7 +10,11 @@
 
     @forelse ($activities as $activity)
         <article>
-            <h2>{{ $activity->title }}</h2>
+            <h2>
+                <a href="{{ route('activities.show', $activity) }}">
+                    {{ $activity->title }}
+                </a>
+            </h2>
             <p>Tanggal: {{ $activity->activity_date->format('d M Y') }}</p>
             <p>Kategori: {{ $activity->category }}</p>
             <p>Status: {{ $activity->status }}</p>

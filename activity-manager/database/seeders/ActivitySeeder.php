@@ -28,6 +28,33 @@ class ActivitySeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'title' => 'Pelatihan Laravel Dasar',
+                'description' => 'Belajar dasar framework Laravel.',
+                'activity_date' => '2026-10-15',
+                'category' => 'Pelatihan',
+                'status' => 'Ongoing',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Diskusi Proyek Web',
+                'description' => 'Diskusi pengembangan proyek berbasis web.',
+                'activity_date' => '2026-10-20',
+                'category' => 'Diskusi',
+                'status' => 'Ongoing',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Presentasi Landing Page',
+                'description' => 'Presentasi hasil pengembangan landing page.',
+                'activity_date' => '2026-09-30',
+                'category' => 'Presentasi',
+                'status' => 'Done',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
