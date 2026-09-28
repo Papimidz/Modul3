@@ -14,15 +14,22 @@ class StoreActivityRequest extends FormRequest
 
     public function rules(): array
     {
+        $activity = $this->route('activity');
+
         return [
-            'title' => ['required', 'string', 'min:5', 'max:100'],
-            'description' => ['nullable', 'string', 'max:1000'],
-            'activity_date' => ['required', 'date'],
-            'category' => ['required', 'string', 'max:50'],
-            'status' => [
+            'category_id' => ['required', 'exists:categories,id'],
+            'code' => [
                 'required',
-                Rule::in(Activity::STATUSES),
+                'string',
+                'max:30',
+                Rule::unique('activities', 'code')->ignore($activity),
             ],
+            'title' => ['required', 'string', 'max:150'],
+            'description' => ['nullable', 'string'],
+            'start_at' => ['required', 'date'],
+            'end_at' => ['required', 'date', 'after_or_equal:start_at'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'capacity' => ['required', 'integer', 'min:1', 'max:500'],
         ];
     }
 }

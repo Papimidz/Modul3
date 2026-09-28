@@ -3,14 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Activity extends Model
 {
     protected $fillable = [
+        'category_id',
+        'code',
         'title',
         'description',
         'activity_date',
         'category',
+        'start_at',
+        'end_at',
+        'location',
+        'capacity',
         'status',
     ];
 
@@ -18,12 +25,20 @@ class Activity extends Model
     {
         return [
             'activity_date' => 'date',
+            'start_at' => 'datetime',
+            'end_at' => 'datetime',
+            'capacity' => 'integer',
         ];
     }
 
     public const STATUSES = [
-        'Planned',
-        'Ongoing',
-        'Done',
+        'draft',
+        'published',
+        'completed',
     ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
