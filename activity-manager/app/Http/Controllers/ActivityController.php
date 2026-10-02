@@ -7,26 +7,52 @@ use App\Http\Requests\UpdateActivityRequest;
 use App\Models\Activity;
 use App\Services\ActivityService;
 use DomainException;
+use App\Models\Category;
 
 class ActivityController extends Controller
 {
     public function index()
     {
-        $validStatuses = Activity::STATUSES;
-
+        $search = request('search');
+        $categoryId = request('category_id');
         $status = request('status');
+        $sort = request('sort', 'latest');
 
         $activities = Activity::query()
+            ->with('category')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('title', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%");
+                });
+            })
+            ->when($categoryId, function ($query, $categoryId) {
+                $query->where('category_id', $categoryId);
+            })
             ->when(
-                in_array($status, $validStatuses, true),
-                fn ($query) => $query->where('status', $status)
+                in_array($status, Activity::STATUSES, true),
+                function ($query) use ($status) {
+                    $query->where('status', $status);
+                }
             )
-            ->orderBy('activity_date')
+            ->orderBy(
+                'start_at',
+                $sort === 'oldest' ? 'asc' : 'desc'
+            )
+            ->paginate(10)
+            ->withQueryString();
+
+        $categories = Category::query()
+            ->orderBy('name')
             ->get();
 
         return view('activities.index', compact(
             'activities',
-            'status'
+            'categories',
+            'search',
+            'categoryId',
+            'status',
+            'sort'
         ));
     }
 
