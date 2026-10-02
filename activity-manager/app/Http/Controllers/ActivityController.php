@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateActivityRequest;
 use App\Models\Activity;
 use App\Models\Category;
 use App\Services\ActivityService;
-use DomainException;
+use Illuminate\Support\Facades\Storage;
 
 class ActivityController extends Controller
 {
@@ -94,7 +94,17 @@ class ActivityController extends Controller
         StoreActivityRequest $request,
         ActivityService $service
     ) {
-        $activity = $service->create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('poster')) {
+            $data['poster_path'] = $request
+                ->file('poster')
+                ->store('posters', 'public');
+        }
+
+        unset($data['poster']);
+
+        $activity = $service->create($data);
 
         return to_route('activities.show', $activity)
             ->with('success', 'Kegiatan berhasil dibuat.');
@@ -105,17 +115,29 @@ class ActivityController extends Controller
         Activity $activity,
         ActivityService $service
     ) {
-        try {
-            $service->update(
-                $activity,
-                $request->validated()
-            );
-        } catch (DomainException $exception) {
-            return back()
-                ->withErrors([
-                    'status' => $exception->getMessage(),
-                ])
-                ->withInput();
+        $data = $request->validated();
+
+        $oldPosterPath = $activity->poster_path;
+        $newPosterPath = null;
+
+        if ($request->hasFile('poster')) {
+            $newPosterPath = $request
+                ->file('poster')
+                ->store('posters', 'public');
+
+            $data['poster_path'] = $newPosterPath;
+        }
+
+        unset($data['poster']);
+
+        $service->update($activity, $data);
+
+        if (
+            $newPosterPath &&
+            $oldPosterPath &&
+            $oldPosterPath !== $newPosterPath
+        ) {
+            Storage::disk('public')->delete($oldPosterPath);
         }
 
         return to_route('activities.show', $activity)
@@ -144,5 +166,25 @@ class ActivityController extends Controller
             'success',
             'Kegiatan berhasil diselesaikan.'
         );
+    }
+
+    public function trash()
+    {
+        $activities = Activity::onlyTrashed()
+            ->with('category')
+            ->latest('deleted_at')
+            ->paginate(10);
+
+        return view('activities.trash', compact('activities'));
+    }
+
+    public function restore(int $id)
+    {
+        $activity = Activity::onlyTrashed()->findOrFail($id);
+
+        $activity->restore();
+
+        return to_route('activities.trash')
+            ->with('success', 'Kegiatan berhasil direstore.');
     }
 }

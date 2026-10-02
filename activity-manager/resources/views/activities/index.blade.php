@@ -115,6 +115,9 @@
     <a href="{{ route('activities.create') }}">
         Tambah Kegiatan
     </a>
+    <a href="{{ route('activities.trash') }}">
+        Lihat Trash
+    </a>
 
     <hr>
 

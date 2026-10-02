@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Activity;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class ActivityService
@@ -21,8 +22,29 @@ class ActivityService
 
     public function update(Activity $activity, array $data): Activity
     {
-        // Status tidak boleh diubah dari form edit umum.
         unset($data['status']);
+
+        $data['activity_date'] = date(
+            'Y-m-d',
+            strtotime($data['start_at'])
+        );
+
+        if (isset($data['poster'])) {
+            $newPosterPath = $data['poster']->store(
+                'posters',
+                'public'
+            );
+
+            if ($activity->poster_path) {
+                Storage::disk('public')->delete(
+                    $activity->poster_path
+                );
+            }
+
+            $data['poster_path'] = $newPosterPath;
+
+            unset($data['poster']);
+        }
 
         $activity->update($data);
 

@@ -65,6 +65,24 @@
         {{ ucfirst($activity->status) }}
     </p>
 
+    {{-- Poster --}}
+    @if ($activity->poster_path)
+        <p>
+            <strong>Poster:</strong>
+        </p>
+
+        <img
+            src="{{ asset('storage/' . $activity->poster_path) }}"
+            alt="Poster {{ $activity->title }}"
+            width="300"
+        >
+    @else
+        <p>
+            <strong>Poster:</strong>
+            Belum ada poster.
+        </p>
+    @endif
+
     <hr>
 
     {{-- Aksi status --}}

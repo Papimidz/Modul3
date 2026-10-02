@@ -63,6 +63,11 @@ class UpdateActivityRequest extends FormRequest
                 'min:1',
                 'max:500',
             ],
+            'poster' => [
+                'nullable',
+                'image',
+                'max:2048',
+            ],
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Activity extends Model
@@ -22,6 +23,7 @@ class Activity extends Model
         'location',
         'capacity',
         'status',
+        'poster_path',
     ];
 
     protected function casts(): array
@@ -31,6 +33,7 @@ class Activity extends Model
             'start_at' => 'datetime',
             'end_at' => 'datetime',
             'capacity' => 'integer',
+            'registered_count' => 'integer',
         ];
     }
 
@@ -43,5 +46,10 @@ class Activity extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function registrations(): HasMany
+    {
+        return $this->hasMany(Registration::class);
     }
 }

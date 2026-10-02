@@ -161,3 +161,20 @@
         <p>{{ $message }}</p>
     @enderror
 </div>
+
+<br>
+
+<div>
+    <label for="poster">Poster Kegiatan</label>
+
+    <input
+        id="poster"
+        name="poster"
+        type="file"
+        accept="image/*"
+    >
+
+    @error('poster')
+        <p>{{ $message }}</p>
+    @enderror
+</div>
