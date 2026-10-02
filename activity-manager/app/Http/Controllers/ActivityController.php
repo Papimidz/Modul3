@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreActivityRequest;
 use App\Http\Requests\UpdateActivityRequest;
 use App\Models\Activity;
+use App\Models\Category;
 use App\Services\ActivityService;
 use DomainException;
-use App\Models\Category;
 
 class ActivityController extends Controller
 {
@@ -63,12 +63,23 @@ class ActivityController extends Controller
 
     public function create()
     {
-        return view('activities.create');
+        $categories = Category::query()
+            ->orderBy('name')
+            ->get();
+
+        return view('activities.create', compact('categories'));
     }
 
     public function edit(Activity $activity)
     {
-        return view('activities.edit', compact('activity'));
+        $categories = Category::query()
+            ->orderBy('name')
+            ->get();
+
+        return view('activities.edit', compact(
+            'activity',
+            'categories'
+        ));
     }
 
     public function destroy(Activity $activity)

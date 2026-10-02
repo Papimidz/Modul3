@@ -11,6 +11,11 @@ class ActivityService
     {
         $data['status'] = 'draft';
 
+        $data['activity_date'] = date(
+            'Y-m-d',
+            strtotime($data['start_at'])
+        );
+
         return Activity::create($data);
     }
 
