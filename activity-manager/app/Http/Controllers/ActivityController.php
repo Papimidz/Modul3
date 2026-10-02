@@ -121,4 +121,28 @@ class ActivityController extends Controller
         return to_route('activities.show', $activity)
             ->with('success', 'Kegiatan berhasil diperbarui.');
     }
+
+    public function publish(
+        Activity $activity,
+        ActivityService $service
+    ) {
+        $service->publish($activity);
+
+        return back()->with(
+            'success',
+            'Kegiatan berhasil dipublikasikan.'
+        );
+    }
+
+    public function complete(
+        Activity $activity,
+        ActivityService $service
+    ) {
+        $service->complete($activity);
+
+        return back()->with(
+            'success',
+            'Kegiatan berhasil diselesaikan.'
+        );
+    }
 }
